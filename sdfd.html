@@ -1,0 +1,311 @@
+<html>
+<head>
+	<title>Wizard-O-Shoot</title>
+</head>
+<body background="images.jpg">
+	<img src="menu_background_by_stickerb-d9inv26.png" alt="sd" width=1152 height=607>
+	<canvas id="myCanvas" width=1152 height=607>
+	</canvas>
+	<div id="myDiv"></div>
+	<audio id="xyz">
+  <source src="shot-[AudioTrimmer.com](1).ogg" type="audio/ogg">
+  <source src="shot-[AudioTrimmer.com](1).mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+<audio id="abc">
+  <source src="Secret-Catacombs.ogg" type="audio/ogg">
+  <source src="Secret-Catacombs.mp3" type="audio/mpeg">
+Your browser does not support the audio element.
+</audio>
+	<p id="time"></p>
+	<p id="score">Score:&nbsp;&nbsp;&nbsp;</p>
+	<style>
+	#myDiv{
+		position: fixed;
+		left:500;
+		top:303;
+		font-size: 70px;
+		background-color: black;
+		color:green;
+	}
+	img{
+		position:fixed;
+		top:18px;
+		left:120px;
+	}
+	#score{
+		color:green;
+		font-family: "Monotype Corsiva";
+		background-color: black;
+
+		font-weight: bold;
+		font-size:20px;
+		padding:10px;
+		position:fixed;
+		top:0px;
+		left:900px;
+	}
+	#time{
+		color:green;
+		font-size:20px;
+		font-weight: bold;
+		font-family: "Monotype Corsiva";
+		background-color: black;
+		padding:10px;
+		position:fixed;
+		top:0px;
+		left:120px;
+	}
+	.restart{position: absolute; top:28px; left:1050px;   background-color: #000000; font-size:25px; 
+			font-family: "Times New Roman"; color:#FFFFFF;}
+    .quit{position: absolute; top:28px; left:1200px;   background-color: #000000; font-size:25px; 
+			font-family: "Times New Roman"; color:#FFFFFF;}
+
+</style>
+<form    action="pause.html">
+    <input type="submit" class="restart"  value="Restart" />
+	</form>
+<form    action="logout.html">
+    <input type="submit" class="quit"  value="Quit" />
+	</form>
+</style>
+</body>
+
+<script >
+	var canvas;
+	var smoke=new Image();
+	smoke.src="4b4b9918422e0a619ab780da35124d66.png"
+		var ctx;
+		var posX;
+		var posY;
+		var tar={
+			x:50,y:50
+		}
+		var mousePos;
+		var w=91;
+		var h=0;
+		var h=91;
+		var ch=new Image();
+		ch.src="target.png";
+		var ch2=new Image();
+		ch2.src="bat.png";
+		var canWidth;
+		var canHeight;
+		var t=30;;
+		var xSpeed=2;
+		var ySpeed=3;
+		var x=0;
+		var y=0;
+		var score;
+		var s=0;
+		var srcX=0;
+		var srcY=0;
+		var sheetWidth=990;
+		var sheetHeight=117;
+		var cols=5;
+		var rows=1;
+		var width=sheetWidth/cols;
+		var height=sheetHeight/rows;
+		var current=0;
+		var srcX2=0;
+		var srcY2=0;
+		var sheetWidth2=1386;
+		var sheetHeight2=148;
+		var cols2=7;
+		var rows2=1;
+		var width2=sheetWidth2/cols2;
+		var height2=sheetHeight2/rows2;
+		var current2=0;
+		var ch3=new Image();
+		ch3.src="batDeath.png";
+		var k;
+		window.onload=function init()
+{
+	canvas=document.getElementById("myCanvas");
+	ctx=canvas.getContext("2d");
+	canvas.style.border="1px solid black";
+	canvas.style.left = "120px";
+    canvas.style.position = "absolute";
+	canvas.addEventListener("mousemove",mouseMoved);
+	canvas.addEventListener("mousedown",clicked);
+	document.getElementById("score").innerHTML="Score:"+s;
+	document.getElementById("time").innerHTML="Time left:"+t;
+	setInterval(timer,1000);
+	canWidth=canvas.width;
+	canHeight=canvas.height;
+	var b=document.getElementById("abc");
+	b.play();
+		
+	mainloop();
+
+};
+function mainloop()
+{
+	movePlayerWithMouse();
+	draw();
+	k=requestAnimationFrame(mainloop);
+}
+function mouseMoved(evt) {
+    mousePos = getMousePos(canvas, evt);
+}
+
+function getMousePos(canvas, evt)
+ {
+    
+
+    var rect = canvas.getBoundingClientRect();
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+    };
+}
+function timer()
+{
+	t--;
+	document.getElementById("time").innerHTML="Time left:"+t;
+	if(t<=0)
+	{
+		document.getElementById("time").innerHTML="Time Over!";
+		cancelAnimationFrame(k);
+		var str = "Click to continue";
+		if(s<100)
+		{
+			var result = str.link("end.html");
+    		document.getElementById("myDiv").innerHTML = result;
+		}
+		else
+		{
+			var result = str.link("win.html");
+    		document.getElementById("myDiv").innerHTML = result;
+
+		}
+    
+	}
+	
+
+}
+function clicked()
+{
+	var a=document.getElementById("xyz");
+	
+	if(((x+width)>=mousePos.x)&&(x<=mousePos.x)&&((y+height)>=mousePos.y)&&(y<=mousePos.y))
+	{
+	
+		
+		a.play();
+		
+		xSpeed=Math.floor(Math.random()*8)+1;
+		ySpeed=Math.floor(Math.random()*8)+1;
+		x=Math.floor(Math.random()*400);
+		y=Math.floor(Math.random()*400);
+		current=0;
+		t+=1;
+		document.getElementById("time").innerHTML="Time left:"+t;
+		scoring();
+		xy();
+		
+		
+	}
+	else
+	{
+		a.play();
+		reduce();
+	}
+}
+function xy()
+{
+	ctx.clearRect(0,0,canWidth,canHeight);
+	current2=0;
+	draw2();
+}
+function scoring()
+{
+	s+=10;
+	document.getElementById("score").innerHTML="Score:"+s;
+}
+function reduce()
+{
+	t-=2;
+		document.getElementById("time").innerHTML="Time left:"+t;
+	if(s>0)
+	{
+	s-=5;
+	document.getElementById("score").innerHTML="Score:"+s;
+	}
+
+}
+function update2()
+		{
+			current2=++current2%cols2;
+			srcX2=current2*width2;
+			srcY2=0;
+			
+			ctx.clearRect(0,0,canWidth,canHeight);
+
+		}
+		function draw2()
+		{
+			
+			update2();
+			ctx.drawImage(ch3,srcX2,srcY2,width2,height2,x,y,width2,height2);
+			var z=requestAnimationFrame(draw2);
+			if(current2==5)
+			{
+				cancelAnimationFrame(z);
+				draw();
+			}
+			
+			
+		}
+
+function update()
+		{
+			current=++current%cols;
+			srcX=current*width;
+			srcY=0;
+			ctx.clearRect(0,0,canWidth,canHeight);
+
+		}
+		function draw()
+		{
+			update();
+			ctx.drawImage(ch2,srcX,srcY,width,height,x,y,width,height);
+			x+=xSpeed;
+			y+=ySpeed;
+			test();
+			obb(tar);
+			
+		}
+		function test()
+		{
+			if((x+width)>canWidth)
+			{
+				xSpeed=-xSpeed;
+			}
+			else if(x<0)
+			{
+				xSpeed=-xSpeed;
+			}
+			if((y+height)>canHeight)
+			{
+				ySpeed=-ySpeed;
+			}
+			else if(y<0)
+			{
+				ySpeed=-ySpeed;
+			}
+		}
+		function movePlayerWithMouse() {
+  if(mousePos !== undefined) {
+    tar.x = mousePos.x;
+    tar.y = mousePos.y;
+  }
+}
+
+function obb(pos)
+		{
+			ctx.drawImage(ch,pos.x-45,pos.y-45,w,h);
+
+		}
+	</script>
+	</html>
